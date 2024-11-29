@@ -1,11 +1,12 @@
 import React from "react";
 import PersonalInfoForm from "./forms/PersonalInfoForm";
 import GeneralInfoForm from "./forms/GeneralInfoForm";
-import { EditorFromProps } from "@/lib/type";
+import { EditorFormProps } from "@/lib/type";
+import WorkExperienceForm from "./forms/WorkExperienceForm";
 
 export const steps: {
   title: string;
-  component: React.ComponentType<EditorFromProps>;
+  component: React.ComponentType<EditorFormProps>;
   key: string;
 }[] = [
   {
@@ -17,5 +18,10 @@ export const steps: {
     title: "Personal info",
     component: PersonalInfoForm,
     key: "personal-info",
+  },
+  {
+    title: "Work experience",
+    component: WorkExperienceForm,
+    key: "work-experience",
   },
 ];

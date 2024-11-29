@@ -12,12 +12,12 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useEffect } from "react";
-import { EditorFromProps } from "@/lib/type";
+import { EditorFormProps } from "@/lib/type";
 
 export default function GeneralInfoForm({
   resumeData,
   setResumeData,
-}: EditorFromProps) {
+}: EditorFormProps) {
   const form = useForm<GeneralInfoValues>({
     resolver: zodResolver(generalInfoSchema),
     defaultValues: {

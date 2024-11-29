@@ -11,12 +11,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { personalInfoSchema, PersonalInfoValues } from "@/lib/validation";
 import { useForm } from "react-hook-form";
 import { useEffect } from "react";
-import { EditorFromProps } from "@/lib/type";
+import { EditorFormProps } from "@/lib/type";
 
 export default function PersonalInfoForm({
   resumeData,
   setResumeData,
-}: EditorFromProps) {
+}: EditorFormProps) {
   const form = useForm<PersonalInfoValues>({
     resolver: zodResolver(personalInfoSchema),
     defaultValues: {
