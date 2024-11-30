@@ -1,10 +1,20 @@
 import { EditorFormProps } from "@/lib/type";
-import { Form, useFieldArray, useForm } from "react-hook-form";
+import { Form, useFieldArray, useForm, UseFormReturn } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { workExperiencesSchema } from "@/lib/validation";
 import { WorkExperienceValues } from "@/lib/validation";
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
+import {
+  FormField,
+  FormLabel,
+  FormControl,
+  FormItem,
+  FormDescription,
+} from "@/components/ui/form";
+import { GripHorizontal } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 
 export default function WorkExperienceForm({
   resumeData,
@@ -31,7 +41,7 @@ export default function WorkExperienceForm({
     return unsubscribe;
   }, [form, resumeData, setResumeData]);
 
-  const { fields, append } = useFieldArray({
+  const { fields, append, remove } = useFieldArray({
     control: form.control,
     name: "workExperiences",
   });
@@ -46,7 +56,12 @@ export default function WorkExperienceForm({
       </div>
       <Form {...form}>
         {fields.map((field, index) => (
-          <WorkExperienceItem key={field.id} index={index} />
+          <WorkExperienceItem
+            key={field.id}
+            index={index}
+            form={form}
+            remove={remove}
+          />
         ))}
         <div className="flex justify-center">
           <Button
@@ -69,6 +84,96 @@ export default function WorkExperienceForm({
   );
 }
 
-function WorkExperienceItem({ index }: { index: number }) {
-  return <div>WorkExperienceItem</div>;
+interface WorkExperienceItemProps {
+  form: UseFormReturn<WorkExperienceValues>;
+  index: number;
+  remove: (index: number) => void;
+}
+
+function WorkExperienceItem({ form, index, remove }: WorkExperienceItemProps) {
+  return (
+    <div className="space-y-3 rounded-md border bg-background p-3">
+      <div className="flex justify-between gap-2">
+        <span className="font-semibold">Work experience {index + 1}</span>
+        <GripHorizontal className="size-5 cursor-grab text-muted-foreground" />
+      </div>
+      <FormField
+        control={form.control}
+        name={`workExperiences.${index}.position`}
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Job title</FormLabel>
+            <FormControl>
+              <Input {...field} autoFocus />
+            </FormControl>
+          </FormItem>
+        )}
+      />
+      <FormField
+        control={form.control}
+        name={`workExperiences.${index}.company`}
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Company</FormLabel>
+            <FormControl>
+              <Input {...field} />
+            </FormControl>
+          </FormItem>
+        )}
+      />
+      <div className="grid grid-cols-2 gap-3">
+        <FormField
+          control={form.control}
+          name={`workExperiences.${index}.startDate`}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Start date</FormLabel>
+              <FormControl>
+                <Input
+                  {...field}
+                  type="date"
+                  value={field.value?.slice(0, 10)}
+                />
+              </FormControl>
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name={`workExperiences.${index}.endDate`}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>End date</FormLabel>
+              <FormControl>
+                <Input
+                  {...field}
+                  type="date"
+                  value={field.value?.slice(0, 10)}
+                />
+              </FormControl>
+            </FormItem>
+          )}
+        />
+      </div>
+      <FormDescription>
+        Leave <span className="font-semibold">end date</span> empty if you are
+        currently working here
+      </FormDescription>
+      <FormField
+        control={form.control}
+        name={`workExperiences.${index}.description`}
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Description</FormLabel>
+            <FormControl>
+              <Textarea {...field} />
+            </FormControl>
+          </FormItem>
+        )}
+      />
+      <Button variant="destructive" onClick={() => remove(index)}>
+        Remove
+      </Button>
+    </div>
+  );
 }
