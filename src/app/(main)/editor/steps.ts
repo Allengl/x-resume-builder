@@ -4,6 +4,7 @@ import GeneralInfoForm from "./forms/GeneralInfoForm";
 import { EditorFormProps } from "@/lib/type";
 import WorkExperienceForm from "./forms/WorkExperienceForm";
 import EducationForm from "./forms/EducationForm";
+import SkillsForm from "./forms/SkillsForm";
 export const steps: {
   title: string;
   component: React.ComponentType<EditorFormProps>;
@@ -28,5 +29,10 @@ export const steps: {
     title: "Education",
     component: EducationForm,
     key: "education",
+  },
+  {
+    title: "Skills",
+    component: SkillsForm,
+    key: "skill",
   },
 ];
