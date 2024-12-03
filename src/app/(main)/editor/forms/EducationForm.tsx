@@ -51,7 +51,7 @@ export default function EducationForm({
       if (!isValid) return;
       setResumeData({
         ...resumeData,
-        workExperiences: values.educations?.filter((edu) => edu !== undefined),
+        educations: values.educations?.filter((edu) => edu !== undefined) || [],
       });
     });
     return unsubscribe;

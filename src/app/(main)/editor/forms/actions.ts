@@ -4,6 +4,7 @@ import { GenerateSummaryInput, generateSummarySchema } from "@/lib/validation";
 import OpenAI from "openai";
 
 const openai = new OpenAI({
+  baseURL: "https://api.deepseek.com",
   apiKey: process.env.OPENAI_API_KEY,
 });
 

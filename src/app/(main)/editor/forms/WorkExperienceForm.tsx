@@ -1,7 +1,7 @@
 import { EditorFormProps } from "@/lib/type";
 import { useFieldArray, useForm, UseFormReturn } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { workExperiencesSchema } from "@/lib/validation";
+import { workExperienceSchema } from "@/lib/validation";
 import { WorkExperienceValues } from "@/lib/validation";
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
@@ -41,7 +41,7 @@ export default function WorkExperienceForm({
   setResumeData,
 }: EditorFormProps) {
   const form = useForm<WorkExperienceValues>({
-    resolver: zodResolver(workExperiencesSchema),
+    resolver: zodResolver(workExperienceSchema),
     defaultValues: {
       workExperiences: resumeData.workExperiences || [],
     },
@@ -53,9 +53,8 @@ export default function WorkExperienceForm({
       if (!isValid) return;
       setResumeData({
         ...resumeData,
-        workExperiences: values.workExperiences?.filter(
-          (exp) => exp !== undefined,
-        ),
+        workExperiences:
+          values.workExperiences?.filter((exp) => exp !== undefined) || [],
       });
     });
     return unsubscribe;

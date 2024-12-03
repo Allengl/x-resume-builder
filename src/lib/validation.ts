@@ -15,11 +15,11 @@ export const personalInfoSchema = z.object({
     .refine(
       (file) =>
         !file || (file instanceof File && file.type.startsWith("image/")),
-      "Must be na image fileed",
+      "Must be an image file",
     )
     .refine(
-      (file) => !file || file.size <= 4 * 1024 * 1024,
-      "Max file size is 5MB",
+      (file) => !file || file.size <= 1024 * 1024 * 4,
+      "File must be less then 4MB",
     ),
   firstName: optionalString,
   lastName: optionalString,
@@ -32,7 +32,7 @@ export const personalInfoSchema = z.object({
 
 export type PersonalInfoValues = z.infer<typeof personalInfoSchema>;
 
-export const workExperiencesSchema = z.object({
+export const workExperienceSchema = z.object({
   workExperiences: z
     .array(
       z.object({
@@ -46,14 +46,14 @@ export const workExperiencesSchema = z.object({
     .optional(),
 });
 
-export type WorkExperienceValues = z.infer<typeof workExperiencesSchema>;
+export type WorkExperienceValues = z.infer<typeof workExperienceSchema>;
 
 export const educationSchema = z.object({
   educations: z
     .array(
       z.object({
-        school: optionalString,
         degree: optionalString,
+        school: optionalString,
         startDate: optionalString,
         endDate: optionalString,
       }),
@@ -78,7 +78,7 @@ export type SummaryValues = z.infer<typeof summarySchema>;
 export const resumeSchema = z.object({
   ...generalInfoSchema.shape,
   ...personalInfoSchema.shape,
-  ...workExperiencesSchema.shape,
+  ...workExperienceSchema.shape,
   ...educationSchema.shape,
   ...skillsSchema.shape,
   ...summarySchema.shape,
@@ -88,12 +88,12 @@ export const resumeSchema = z.object({
 
 export type ResumeValues = Omit<z.infer<typeof resumeSchema>, "photo"> & {
   id?: string;
-  photo?: File | string | undefined;
+  photo?: File | string | null;
 };
 
 export const generateSummarySchema = z.object({
   jobTitle: optionalString,
-  ...workExperiencesSchema.shape,
+  ...workExperienceSchema.shape,
   ...educationSchema.shape,
   ...skillsSchema.shape,
 });
