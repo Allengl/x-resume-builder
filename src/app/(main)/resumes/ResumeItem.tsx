@@ -10,10 +10,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ResumeServerData } from "@/lib/type";
 import { mapToResumeValues } from "@/lib/utils";
-import { useState, useTransition } from "react";
+import { useRef, useState, useTransition } from "react";
 import { format } from "date-fns";
 import Link from "next/link";
-import { MoreVerticalIcon, Trash2 } from "lucide-react";
+import { MoreVerticalIcon, Printer, Trash2 } from "lucide-react";
 import {
   Dialog,
   DialogTitle,
@@ -25,12 +25,19 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { deleteResume } from "./actions";
 import LoadingButton from "@/components/LoadingButton";
-
+import { useReactToPrint } from "react-to-print";
 interface ResumeItemProps {
   resume: ResumeServerData;
 }
 
 export default function ResumeItem({ resume }: ResumeItemProps) {
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  const reactToPrintFn = useReactToPrint({
+    contentRef,
+    documentTitle: resume.title || "Resume",
+  });
+
   const wasUpdated = resume.updatedAt !== resume.createdAt;
 
   return (
@@ -57,19 +64,21 @@ export default function ResumeItem({ resume }: ResumeItemProps) {
           <ResumePreview
             resumeData={mapToResumeValues(resume)}
             className="overflow-hidden shadow-sm transition-shadow group-hover:shadow-lg"
+            contentRef={contentRef}
           />
           <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-white to-transparent" />
         </Link>
       </div>
-      <MoreMenu resumeId={resume.id} />
+      <MoreMenu resumeId={resume.id} onPrintClick={reactToPrintFn} />
     </div>
   );
 }
 
 interface MoreMenuProps {
   resumeId: string;
+  onPrintClick: () => void;
 }
-function MoreMenu({ resumeId }: MoreMenuProps) {
+function MoreMenu({ resumeId, onPrintClick }: MoreMenuProps) {
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
 
   return (
@@ -91,6 +100,13 @@ function MoreMenu({ resumeId }: MoreMenuProps) {
           >
             <Trash2 className="size-4" />
             <span>Delete</span>
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            className="flex items-center gap-2"
+            onClick={onPrintClick}
+          >
+            <Printer className="size-4" />
+            <span>Print</span>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
