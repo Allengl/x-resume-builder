@@ -75,3 +75,21 @@ model Education {
 
   @@map("educations")
 }
+
+
+model UserSubscription {
+  id String @id @default(cuid())
+  userId String @unique
+
+  stripeCustomerId String 
+  stripeSubscriptionId String
+  stripePriceId String
+
+  stripeCurrentPeriodEnd DateTime
+  stripeCancelAtPeriodEnd Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("user_subscriptions")
+}
