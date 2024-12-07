@@ -1,5 +1,6 @@
 import { cache } from "react";
 import prisma from "./prisma";
+import { env } from "@/env";
 export type SubscriptionLevel = "free" | "pro" | "pro_plus";
 
 export const getUserSubscriptionLevel = cache(
@@ -7,20 +8,22 @@ export const getUserSubscriptionLevel = cache(
     const subscription = await prisma.userSubscription.findUnique({
       where: { userId },
     });
+    console.log(subscription);
+
 
     if (!subscription || subscription.stripeCurrentPeriodEnd < new Date()) {
       return "free";
     }
 
     if (
-      subscription.stripePriceId === process.env.NEXT_PUBLIC_STRIPE_PRO_MONTHLY
+      subscription.stripePriceId === env.NEXT_PUBLIC_STRIPE_ID_PRO_MONTHLY
     ) {
       return "pro";
     }
 
     if (
       subscription.stripePriceId ===
-      process.env.NEXT_PUBLIC_STRIPE_PRO_PLUS_MONTHLY
+      env.NEXT_PUBLIC_STRIPE_ID_PRO_PLUS_MONTHLY
     ) {
       return "pro_plus";
     }
