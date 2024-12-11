@@ -53,7 +53,7 @@ model WorkExperience {
   description String?
 
   resumeId String 
-  resume Resume @relation(fields: [resumeId], references: [id])
+  resume Resume @relation(fields: [resumeId], references: [id], onDelete: Cascade)
 
   @@map("work_experiences")
 }
@@ -71,7 +71,7 @@ model Education {
   updatedAt DateTime @updatedAt
 
   resumeId String
-  resume Resume @relation(fields: [resumeId], references: [id])
+  resume Resume @relation(fields: [resumeId], references: [id], onDelete: Cascade)
 
   @@map("educations")
 }
