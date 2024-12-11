@@ -10,7 +10,7 @@ export async function POST(req: NextRequest) {
     const payload = await req.text();
     const signature = req.headers.get("stripe-signature");
     if (!payload) {
-      throw new Error('Request payload is empty');
+      throw new Error("Request payload is empty");
     }
     if (!signature) {
       return new Response("Signature is missing", { status: 400 });
@@ -54,7 +54,9 @@ async function handleSessionCompleted(session: Stripe.Checkout.Session) {
     throw new Error("User ID is missing in session metadata");
   }
 
-  (await clerkClient()).users.updateUserMetadata(userId, {
+  await (
+    await clerkClient()
+  ).users.updateUserMetadata(userId, {
     privateMetadata: {
       stripeCustomerId: session.customer as string,
     },
@@ -70,7 +72,6 @@ async function handleSubscriptionCreatedOrUpdated(subscriptionId: string) {
     subscription.status === "trialing" ||
     subscription.status === "past_due"
   ) {
-
     await prisma.userSubscription.upsert({
       where: {
         userId: subscription.metadata.userId,
@@ -94,7 +95,6 @@ async function handleSubscriptionCreatedOrUpdated(subscriptionId: string) {
       },
     });
     console.log("订阅成功");
-
   } else {
     await prisma.userSubscription.deleteMany({
       where: {
